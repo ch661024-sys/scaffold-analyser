@@ -618,7 +618,7 @@ const App = () => {
         )}
       </div>
       <style dangerouslySetInnerHTML={{ __html: `
-        @media print { .no-print, header, .grid-cols-1, .lg\\:col-span-1 { display: none !important; } body { background: white !important; } .max-w-5xl { max-width: 100% !important; margin: 0 !important; box-shadow: none !important; } #report-view { border: none !important; padding: 0 !important; } } 
+        @media print { .no-print, header { display: none !important; } body { background: white !important; } .max-w-5xl { max-width: 100% !important; margin: 0 !important; box-shadow: none !important; } #report-view { border: none !important; padding: 0 !important; } } 
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; appearance: textfield; }
         .custom-scrollbar::-webkit-scrollbar { width: 6px; } 
