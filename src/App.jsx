@@ -340,7 +340,7 @@ const App = () => {
           <div className="flex items-center gap-6 relative z-10">
             <div className="bg-gradient-to-br from-cyan-400 to-blue-700 p-4 rounded-2xl shadow-xl"><Calculator className="w-8 h-8 text-white" /></div>
             <div>
-              <h1 className="text-2xl md:text-3xl font-black text-white italic uppercase tracking-tighter leading-none">SCAFFOLD ANALYSER <span className="text-cyan-400">ULTRA v8.0</span></h1>
+              <h1 className="text-2xl md:text-3xl font-black text-white italic uppercase tracking-tighter leading-none">SCAFFOLD BEAM ANALYSER <span className="text-cyan-400">ULTRA V8.1</span></h1>
               <div className="flex gap-4 mt-2">
                 <span className="text-[9px] font-black uppercase text-slate-500 tracking-widest bg-slate-800 px-2 py-0.5 rounded flex items-center gap-1.5"><Activity className="w-2 h-2 text-cyan-400" /> Structural Engine Active</span>
               </div>
