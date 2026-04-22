@@ -661,7 +661,7 @@ const App = () => {
               </div>
 
               {/* Collapsible Technical Basis */}
-              <div className="pt-10 border-t-2 border-slate-50">
+              <div className="pt-10 border-t-2 border-slate-50 break-inside-avoid">
                 <button 
                   onClick={() => setShowTechBasis(!showTechBasis)}
                   className="flex items-center gap-3 bg-slate-900 text-white px-6 py-3 rounded-2xl font-black uppercase tracking-tighter italic hover:bg-slate-800 transition-all shadow-lg no-print"
@@ -671,77 +671,75 @@ const App = () => {
                   {showTechBasis ? <ChevronUp className="w-4 h-4 ml-2" /> : <ChevronDown className="w-4 h-4 ml-2" />}
                 </button>
 
-                {(showTechBasis || (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('print').matches)) && (
-                  <div className="mt-8 space-y-12 animate-in fade-in slide-in-from-top-4 duration-500">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                      <div className="space-y-4">
-                        <h5 className="font-black uppercase text-slate-900 border-b pb-2 flex items-center gap-2">
-                          <Activity className="w-4 h-4 text-cyan-600" /> 1. Mathematical Method
-                        </h5>
-                        <p className="text-[13px] text-slate-600 leading-relaxed font-medium">
-                          The application utilizes the <strong>Matrix Displacement Method (FEA)</strong>. Unlike Macaulay’s Method or simple Superposition, the engine discretizes the beam into distinct finite elements at load and support nodes. This allows for exact solutions of multi-span systems and iterative tension-only convergence for Lift-off supports.
-                        </p>
-                      </div>
-
-                      <div className="space-y-4">
-                        <h5 className="font-black uppercase text-slate-900 border-b pb-2 flex items-center gap-2">
-                          <Layers className="w-4 h-4 text-cyan-600" /> 2. Structural Assumptions
-                        </h5>
-                        <ul className="text-[13px] text-slate-600 space-y-2 font-bold italic">
-                          <li className="flex items-center gap-2"><div className="w-1 h-1 bg-cyan-400 rounded-full" /> Euler-Bernoulli Beam Theory (Plane sections remain plane)</li>
-                          <li className="flex items-center gap-2"><div className="w-1 h-1 bg-cyan-400 rounded-full" /> Small Deflection Theory (Geometric linearity)</li>
-                          <li className="flex items-center gap-2"><div className="w-1 h-1 bg-cyan-400 rounded-full" /> Linear Elasticity (Hooke's Law: E is constant)</li>
-                        </ul>
-                      </div>
+                <div className={`mt-8 space-y-12 animate-in fade-in slide-in-from-top-4 duration-500 ${showTechBasis ? 'block' : 'hidden print:block'}`}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-10 break-inside-avoid">
+                    <div className="space-y-4">
+                      <h5 className="font-black uppercase text-slate-900 border-b pb-2 flex items-center gap-2">
+                        <Activity className="w-4 h-4 text-cyan-600" /> 1. Mathematical Method
+                      </h5>
+                      <p className="text-[13px] text-slate-600 leading-relaxed font-medium">
+                        The application utilizes the <strong>Matrix Displacement Method (FEA)</strong>. Unlike Macaulay’s Method or simple Superposition, the engine discretizes the beam into distinct finite elements at load and support nodes. This allows for exact solutions of multi-span systems and iterative tension-only convergence for Lift-off supports.
+                      </p>
                     </div>
 
-                    <div className="bg-slate-50 p-8 rounded-[2rem] border border-slate-100 shadow-inner">
-                      <h5 className="font-black uppercase text-slate-900 mb-6 text-center italic">Core Matrix Formulation</h5>
-                      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-center">
-                        <div className="space-y-4">
-                          <p className="text-[12px] font-black text-slate-500 uppercase tracking-widest mb-2">Local Element Stiffness [k]:</p>
-                          <div className="bg-white p-4 rounded-xl border border-slate-200 font-mono text-[10px] leading-tight overflow-x-auto">
-                            {'k_loc = (EI / L^3) * ['}<br/>
-                            {'  [12,   6L,   -12,   6L  ],'}<br/>
-                            {'  [6L,   4L^2, -6L,   2L^2],'}<br/>
-                            {'  [-12, -6L,    12,  -6L  ],'}<br/>
-                            {'  [6L,   2L^2, -6L,   4L^2]'}<br/>
-                            {']'}
-                          </div>
-                        </div>
-                        <div className="space-y-4">
-                          <p className="text-[12px] font-black text-slate-500 uppercase tracking-widest mb-2">Equilibrium Equation:</p>
-                          <div className="bg-white p-8 rounded-xl border border-slate-200 text-center">
-                            <span className="text-2xl font-black italic text-cyan-800 tracking-tighter">{'[K][U] = [F]'}</span>
-                            <p className="text-[10px] text-slate-400 mt-4 uppercase font-bold tracking-widest">Global Stiffness x Displacement = Nodal Forces</p>
-                          </div>
+                    <div className="space-y-4">
+                      <h5 className="font-black uppercase text-slate-900 border-b pb-2 flex items-center gap-2">
+                        <Layers className="w-4 h-4 text-cyan-600" /> 2. Structural Assumptions
+                      </h5>
+                      <ul className="text-[13px] text-slate-600 space-y-2 font-bold italic">
+                        <li className="flex items-center gap-2"><div className="w-1 h-1 bg-cyan-400 rounded-full" /> Euler-Bernoulli Beam Theory (Plane sections remain plane)</li>
+                        <li className="flex items-center gap-2"><div className="w-1 h-1 bg-cyan-400 rounded-full" /> Small Deflection Theory (Geometric linearity)</li>
+                        <li className="flex items-center gap-2"><div className="w-1 h-1 bg-cyan-400 rounded-full" /> Linear Elasticity (Hooke's Law: E is constant)</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-50 p-8 rounded-[2rem] border border-slate-100 shadow-inner break-inside-avoid">
+                    <h5 className="font-black uppercase text-slate-900 mb-6 text-center italic">Core Matrix Formulation</h5>
+                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-center">
+                      <div className="space-y-4">
+                        <p className="text-[12px] font-black text-slate-500 uppercase tracking-widest mb-2">Local Element Stiffness [k]:</p>
+                        <div className="bg-white p-4 rounded-xl border border-slate-200 font-mono text-[10px] leading-tight overflow-x-auto">
+                          {'k_loc = (EI / L^3) * ['}<br/>
+                          {'  [12,   6L,   -12,   6L  ],'}<br/>
+                          {'  [6L,   4L^2, -6L,   2L^2],'}<br/>
+                          {'  [-12, -6L,    12,  -6L  ],'}<br/>
+                          {'  [6L,   2L^2, -6L,   4L^2]'}<br/>
+                          {']'}
                         </div>
                       </div>
-                    </div>
-
-                    <div className="border-l-4 border-emerald-500 pl-8 space-y-4">
-                      <h5 className="font-black uppercase text-slate-900 italic">Structural Engine Validation Case</h5>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-[11px] font-bold italic text-slate-500">
-                        <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                          <span className="text-slate-800 uppercase block mb-1">Standard Check</span>
-                          4m Beam, 10kN Center Load
-                        </div>
-                        <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                          <span className="text-slate-800 uppercase block mb-1">Manual Formula</span>
-                          {'M_max = PL/4 = (10*4)/4 = 10kNm'}
-                        </div>
-                        <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-100 text-emerald-700">
-                          <span className="text-emerald-800 uppercase block mb-1">Engine Output</span>
-                          {'Result: 10.000kNm (100% Correlation)'}
+                      <div className="space-y-4">
+                        <p className="text-[12px] font-black text-slate-500 uppercase tracking-widest mb-2">Equilibrium Equation:</p>
+                        <div className="bg-white p-8 rounded-xl border border-slate-200 text-center">
+                          <span className="text-2xl font-black italic text-cyan-800 tracking-tighter">{'[K][U] = [F]'}</span>
+                          <p className="text-[10px] text-slate-400 mt-4 uppercase font-bold tracking-widest">Global Stiffness x Displacement = Nodal Forces</p>
                         </div>
                       </div>
                     </div>
                   </div>
-                )}
+
+                  <div className="border-l-4 border-emerald-500 pl-8 space-y-4 break-inside-avoid">
+                    <h5 className="font-black uppercase text-slate-900 italic">Structural Engine Validation Case</h5>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-[11px] font-bold italic text-slate-500">
+                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <span className="text-slate-800 uppercase block mb-1">Standard Check</span>
+                        4m Beam, 10kN Center Load
+                      </div>
+                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <span className="text-slate-800 uppercase block mb-1">Manual Formula</span>
+                        {'M_max = PL/4 = (10*4)/4 = 10kNm'}
+                      </div>
+                      <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-100 text-emerald-700">
+                        <span className="text-emerald-800 uppercase block mb-1">Engine Output</span>
+                        {'Result: 10.000kNm (100% Correlation)'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* OFFICIAL DISCLAIMER SECTION */}
-              <div className="p-8 rounded-[1.5rem] bg-slate-50 border border-slate-200 space-y-4">
+              <div className="p-8 rounded-[1.5rem] bg-slate-50 border border-slate-200 space-y-4 break-inside-avoid">
                 <h4 className="text-[11px] font-black uppercase text-slate-400 tracking-[0.2em] border-b border-slate-200 pb-2 flex items-center gap-2">
                   <Info className="w-4 h-4 text-slate-400" /> DISCLAIMER
                 </h4>
@@ -750,7 +748,7 @@ const App = () => {
                 </p>
               </div>
 
-              <div className={`p-8 rounded-3xl border-2 flex items-center gap-8 ${!analysisResults.isStable ? 'bg-rose-950 border-rose-500 text-white' : (activeBeam.passBoth ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-rose-50 border-rose-200 text-rose-900')}`}>
+              <div className={`p-8 rounded-3xl border-2 flex items-center gap-8 break-inside-avoid ${!analysisResults.isStable ? 'bg-rose-950 border-rose-500 text-white' : (activeBeam.passBoth ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-rose-50 border-rose-200 text-rose-900')}`}>
                 {!analysisResults.isStable ? <AlertTriangle className="w-12 h-12" /> : (activeBeam.passBoth ? <ShieldCheck className="w-12 h-12 shrink-0" /> : <XCircle className="w-12 h-12 shrink-0" />)}
                 <p className="font-black italic uppercase text-base leading-relaxed tracking-tight">
                   {!analysisResults.isStable ? 
