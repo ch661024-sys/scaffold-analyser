@@ -792,22 +792,21 @@ const App = () => {
       </div>
       <style dangerouslySetInnerHTML={{ __html: `
         @media print { 
-          @page { size: auto; margin: 0; }
+          @page { size: auto; margin: 15mm; }
           html, body { height: auto; overflow: visible; background: #fff !important; margin: 0; padding: 0; }
           .no-print, .no-print-container header, .no-print-container nav, button, select, input { display: none !important; } 
           .no-print-container { max-width: 100% !important; margin: 0 !important; width: 100% !important; background: transparent !important; }
           #report-view { 
-            position: absolute; 
-            top: 0; left: 0; 
+            position: static; 
             width: 100% !important; 
             height: auto; 
             margin: 0 !important; 
-            padding: 2cm !important; 
+            padding: 0 !important; 
             box-shadow: none !important; 
             border: none !important; 
             background: white !important; 
             display: block !important; 
-            z-index: 9999;
+            z-index: auto;
           }
           .aspect-\\[21\\/9\\] { border: 1px solid #ccc !important; }
         } 
