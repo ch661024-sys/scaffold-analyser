@@ -792,10 +792,6 @@ const App = () => {
       </div>
       <style dangerouslySetInnerHTML={{ __html: `
         @media print { 
-          * {
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-          }
           @page { size: auto; margin: 15mm; }
           html, body { height: auto; overflow: visible; background: #fff !important; margin: 0; padding: 0; }
           .no-print, .no-print-container header, .no-print-container nav, button, select, input { display: none !important; } 
