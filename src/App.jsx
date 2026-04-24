@@ -328,7 +328,7 @@ const App = () => {
             const s = currentSupportsState.find(it => Math.abs(it.x - n) < 1e-5 && it.active);
             let rV = s ? (s.type === 'spring' ? (parseFloat(s.stiffness) * 1000 * -U_full[2 * idx]) : finalReactions[2 * idx]) : 0;
             let rM = (s && s.type === 'fixed') ? finalReactions[2 * idx + 1] : 0;
-            vx += rV; mx += rV * (x - n) + rM;
+            vx += rV; mx += rV * (x - n) - rM;
           }
         });
         pointLoads.forEach(p => { if (p.x <= x + 1e-6) { vx -= p.magnitude; mx -= p.magnitude * (x - p.x); } });
@@ -607,7 +607,7 @@ const App = () => {
              <section id="report-view" className="bg-white text-slate-900 p-8 md:p-12 rounded-[2rem] shadow-2xl space-y-12 max-w-5xl mx-auto border-t-[12px] border-cyan-600 min-h-screen relative text-xs print-report-view">
               <div className="flex justify-between items-start border-b-2 border-slate-100 pb-8 gap-4">
                 <div><h1 className="text-3xl md:text-4xl font-black uppercase italic tracking-tighter text-cyan-700">Design Calculation</h1><p className="text-slate-400 font-bold uppercase text-[10px] mt-2 tracking-widest">Ref: CALC-V8.0-EXT</p></div>
-                <div className="text-right"><h3 className="text-lg md:text-xl font-black italic">{projectName || "Calculation Project"}</h3><p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest">{new Date().toLocaleDateString('en-GB')}</p></div>
+                <div className="text-right"><h3 className="text-lg md:text-xl font-black italic">{projectName || "Calculation Project"}</h3><p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest">{new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' })}</p></div>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-sm">
