@@ -566,9 +566,9 @@ const App = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <GraphTile title="Shear Envelope" color="#f43f5e" unit="kN"><ResponsiveContainer width="100%" height="100%"><ComposedChart data={analysisResults.plotData}><CartesianGrid vertical={false} stroke="#1e293b" /><XAxis hide dataKey="x" /><YAxis fontSize={9} stroke="#475569" /><Area type="stepAfter" dataKey="shear" stroke="#f43f5e" fill="#f43f5e" fillOpacity={0.1} strokeWidth={3} /></ComposedChart></ResponsiveContainer></GraphTile>
-                <GraphTile title="Moment Envelope" color="#3b82f6" unit="kNm"><ResponsiveContainer width="100%" height="100%"><ComposedChart data={analysisResults.plotData}><CartesianGrid vertical={false} stroke="#1e293b" /><XAxis hide dataKey="x" /><YAxis reversed fontSize={9} stroke="#475569" /><Area type="monotone" dataKey="moment" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.1} strokeWidth={3} /></ComposedChart></ResponsiveContainer></GraphTile>
-                <GraphTile title="Deflection Shape" color="#818cf8" unit="mm"><ResponsiveContainer width="100%" height="100%"><ComposedChart data={analysisResults.plotData}><CartesianGrid vertical={false} stroke="#1e293b" /><XAxis hide dataKey="x" /><YAxis reversed fontSize={9} stroke="#475569" /><Area type="monotone" dataKey="deflection" stroke="#818cf8" fill="#818cf8" fillOpacity={0.1} strokeWidth={3} /></ComposedChart></ResponsiveContainer></GraphTile>
+                <GraphTile title="Shear Envelope" color="#f43f5e" unit="kN"><ResponsiveContainer width="100%" height="100%"><ComposedChart data={analysisResults.plotData}><CartesianGrid vertical={false} stroke="#1e293b" /><XAxis hide dataKey="x" /><YAxis fontSize={9} stroke="#475569" /><Tooltip contentStyle={{ background: '#0f172a', border: '1px solid #334155', borderRadius: '12px', fontSize: '11px', fontWeight: 'black' }} labelFormatter={v => `x = ${Number(v).toFixed(2)} m`} formatter={(v, n) => [`${Number(v).toFixed(3)} kN`, 'Shear']} cursor={{ stroke: '#f43f5e', strokeWidth: 1, strokeDasharray: '4 2' }} /><Area type="stepAfter" dataKey="shear" stroke="#f43f5e" fill="#f43f5e" fillOpacity={0.1} strokeWidth={3} /></ComposedChart></ResponsiveContainer></GraphTile>
+                <GraphTile title="Moment Envelope" color="#3b82f6" unit="kNm"><ResponsiveContainer width="100%" height="100%"><ComposedChart data={analysisResults.plotData}><CartesianGrid vertical={false} stroke="#1e293b" /><XAxis hide dataKey="x" /><YAxis reversed fontSize={9} stroke="#475569" /><Tooltip contentStyle={{ background: '#0f172a', border: '1px solid #334155', borderRadius: '12px', fontSize: '11px', fontWeight: 'black' }} labelFormatter={v => `x = ${Number(v).toFixed(2)} m`} formatter={(v, n) => [`${Number(v).toFixed(3)} kNm`, 'Moment']} cursor={{ stroke: '#3b82f6', strokeWidth: 1, strokeDasharray: '4 2' }} /><Area type="monotone" dataKey="moment" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.1} strokeWidth={3} /></ComposedChart></ResponsiveContainer></GraphTile>
+                <GraphTile title="Deflection Shape" color="#818cf8" unit="mm"><ResponsiveContainer width="100%" height="100%"><ComposedChart data={analysisResults.plotData}><CartesianGrid vertical={false} stroke="#1e293b" /><XAxis hide dataKey="x" /><YAxis reversed fontSize={9} stroke="#475569" /><Tooltip contentStyle={{ background: '#0f172a', border: '1px solid #334155', borderRadius: '12px', fontSize: '11px', fontWeight: 'black' }} labelFormatter={v => `x = ${Number(v).toFixed(2)} m`} formatter={(v, n) => [`${Number(v).toFixed(3)} mm`, 'Deflection']} cursor={{ stroke: '#818cf8', strokeWidth: 1, strokeDasharray: '4 2' }} /><Area type="monotone" dataKey="deflection" stroke="#818cf8" fill="#818cf8" fillOpacity={0.1} strokeWidth={3} /></ComposedChart></ResponsiveContainer></GraphTile>
               </div>
 
               {/* DEFLECTION SUMMARY BLOCK (Added under graphs) */}
@@ -589,10 +589,45 @@ const App = () => {
             <h2 className="text-3xl md:text-4xl font-black text-white uppercase italic tracking-tighter">STRUCTURAL BEAM LIBRARY</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {analysisSummary.beams.map((b, i) => (
-                <button key={i} onClick={() => { setSelectedBeamIdx(SCAFFOLD_BEAMS.findIndex(orig => orig.name === b.name)); setActiveTab('analysis'); }} className={`p-6 md:p-8 rounded-[2rem] border-2 text-left transition-all relative flex flex-col justify-between ${b.passBoth ? 'bg-slate-900 border-emerald-500/30 shadow-xl hover:border-emerald-500' : 'bg-slate-950/20 border-rose-500/20 opacity-60 grayscale hover:grayscale-0'}`}>
-                  {b.passBoth && <div className="absolute top-6 right-6 bg-emerald-500 p-1.5 rounded-full"><CheckCircle className="w-4 h-4 text-white" /></div>}
-                  <div><div className="text-[9px] font-black text-slate-500 uppercase italic mb-1">{b.mat} Component</div><h4 className="text-lg md:text-xl font-black text-white italic mb-6 leading-tight h-14 overflow-hidden">{b.name}</h4></div>
-                  <div className="space-y-4 border-t border-slate-800 pt-6"><div className="flex justify-between"><div><span className="text-[9px] font-black text-slate-500 uppercase tracking-tighter">Cap. M*</span><div className={`text-lg font-black italic ${b.sM >= analysisResults.peakM ? 'text-emerald-400' : 'text-rose-400'}`}>{b.sM.toFixed(1)}</div></div><div className="text-right"><span className="text-[9px] font-black text-slate-500 uppercase tracking-tighter">Util.</span><div className="text-lg font-black italic text-white">{b.utilM.toFixed(0)}%</div></div></div></div>
+                <button key={i} onClick={() => { setSelectedBeamIdx(SCAFFOLD_BEAMS.findIndex(orig => orig.name === b.name)); setActiveTab('analysis'); }} className={`p-6 md:p-8 rounded-[2rem] border-2 text-left transition-all relative flex flex-col justify-between ${b.passBoth ? 'bg-slate-900 border-emerald-500/30 shadow-xl hover:border-emerald-500' : 'bg-slate-950/20 border-rose-500/20 opacity-60 hover:opacity-100 hover:grayscale-0 grayscale'}`}>
+                  {/* Pass/Fail badge */}
+                  <div className={`absolute top-5 right-5 px-2.5 py-1 rounded-full flex items-center gap-1.5 text-[9px] font-black uppercase tracking-wider ${b.passBoth ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'}`}>
+                    {b.passBoth ? <CheckCircle className="w-3 h-3" /> : <XCircle className="w-3 h-3" />}
+                    {b.passBoth ? 'PASS' : 'FAIL'}
+                  </div>
+                  <div><div className="text-[9px] font-black text-slate-500 uppercase italic mb-1">{b.mat} Component</div><h4 className="text-lg md:text-xl font-black text-white italic mb-6 leading-tight h-14 overflow-hidden pr-16">{b.name}</h4></div>
+                  <div className="space-y-3 border-t border-slate-800 pt-5">
+                    {/* Moment row */}
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <span className="text-[9px] font-black text-slate-500 uppercase tracking-tighter block">Moment Cap.</span>
+                        <span className={`text-base font-black italic ${b.sM >= analysisResults.peakM ? 'text-emerald-400' : 'text-rose-400'}`}>{b.sM.toFixed(1)} <span className="text-[9px] opacity-60">kNm</span></span>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-[9px] font-black text-slate-500 uppercase tracking-tighter block">M-Util</span>
+                        <span className={`text-base font-black italic ${b.utilM > 100 ? 'text-rose-400' : 'text-emerald-400'}`}>{b.utilM.toFixed(0)}%</span>
+                      </div>
+                    </div>
+                    {/* Moment bar */}
+                    <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                      <div className={`h-full rounded-full transition-all ${b.utilM > 100 ? 'bg-rose-500' : 'bg-blue-500'}`} style={{ width: `${Math.min(100, b.utilM)}%` }} />
+                    </div>
+                    {/* Shear row */}
+                    <div className="flex items-center justify-between pt-1">
+                      <div>
+                        <span className="text-[9px] font-black text-slate-500 uppercase tracking-tighter block">Shear Cap.</span>
+                        <span className={`text-base font-black italic ${b.sV >= analysisResults.peakV ? 'text-emerald-400' : 'text-rose-400'}`}>{b.sV.toFixed(1)} <span className="text-[9px] opacity-60">kN</span></span>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-[9px] font-black text-slate-500 uppercase tracking-tighter block">V-Util</span>
+                        <span className={`text-base font-black italic ${b.utilV > 100 ? 'text-rose-400' : 'text-emerald-400'}`}>{b.utilV.toFixed(0)}%</span>
+                      </div>
+                    </div>
+                    {/* Shear bar */}
+                    <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                      <div className={`h-full rounded-full transition-all ${b.utilV > 100 ? 'bg-rose-500' : 'bg-rose-400'}`} style={{ width: `${Math.min(100, b.utilV)}%` }} />
+                    </div>
+                  </div>
                 </button>
               ))}
             </div>
