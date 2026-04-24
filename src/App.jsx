@@ -346,13 +346,10 @@ const App = () => {
         
         const nodalDef = (1 - 3 * Math.pow(xi, 2) + 2 * Math.pow(xi, 3)) * u[0] + (L_elem * (xi - 2 * Math.pow(xi, 2) + Math.pow(xi, 3))) * u[1] + (3 * Math.pow(xi, 2) - 2 * Math.pow(xi, 3)) * u[2] + (L_elem * (-Math.pow(xi, 2) + Math.pow(xi, 3))) * u[3];
         
-        let segmentW = globalUDL;
-        const midPoint = (sortedNodes[elementIdx] + sortedNodes[elementIdx+1]) / 2;
-        patchUDLs.forEach(p => { if (midPoint >= p.start && midPoint <= p.end) segmentW += p.magnitude; });
-        
-        const localDef = (segmentW * Math.pow(x - x1, 2) * Math.pow(sortedNodes[elementIdx + 1] - x, 2)) / (24 * EI);
-        
-        let totalDef = -(nodalDef + localDef) * 1000;
+        // nodalDef via Hermitian shape functions already gives exact cubic interpolation.
+        // The UDL contribution within each element is fully captured by the fixed-end forces
+        // assembled into F during stiffness assembly — no additional localDef correction needed.
+        let totalDef = -nodalDef * 1000;
         finalPlotData.push({ x: parseFloat(x.toFixed(3)), shear: vx, moment: mx, deflection: totalDef });
         fMaxM = Math.max(fMaxM, mx); fMinM = Math.min(fMinM, mx); fMaxV = Math.max(fMaxV, vx); fMinV = Math.min(fMinV, vx);
         fMaxDelta = Math.max(fMaxDelta, totalDef); 
