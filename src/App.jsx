@@ -346,10 +346,15 @@ const App = () => {
         
         const nodalDef = (1 - 3 * Math.pow(xi, 2) + 2 * Math.pow(xi, 3)) * u[0] + (L_elem * (xi - 2 * Math.pow(xi, 2) + Math.pow(xi, 3))) * u[1] + (3 * Math.pow(xi, 2) - 2 * Math.pow(xi, 3)) * u[2] + (L_elem * (-Math.pow(xi, 2) + Math.pow(xi, 3))) * u[3];
         
-        // nodalDef via Hermitian shape functions already gives exact cubic interpolation.
-        // The UDL contribution within each element is fully captured by the fixed-end forces
-        // assembled into F during stiffness assembly — no additional localDef correction needed.
-        let totalDef = -nodalDef * 1000;
+        // The Hermitian shape functions are cubic. UDL produces a 4th-order deflection shape.
+        // The FEA gives exact nodal displacements/rotations, but interior interpolation needs
+        // a quartic correction: v_particular = -w*(x-x1)^2*(x2-x)^2 / (24EI)  [negative = downward]
+        // This is zero at nodes (so peak sagging at nodes stays exact), non-zero between nodes.
+        // Therefore: v_exact = nodalDef - correction, and totalDef = -(nodalDef - correction)*1000
+        let segmentW = globalUDL;
+        patchUDLs.forEach(p => { if (x >= p.start && x <= p.end) segmentW += p.magnitude; });
+        const udlCorrection = (segmentW * Math.pow(x - x1, 2) * Math.pow(sortedNodes[elementIdx + 1] - x, 2)) / (24 * EI);
+        let totalDef = -(nodalDef - udlCorrection) * 1000;
         finalPlotData.push({ x: parseFloat(x.toFixed(3)), shear: vx, moment: mx, deflection: totalDef });
         fMaxM = Math.max(fMaxM, mx); fMinM = Math.min(fMinM, mx); fMaxV = Math.max(fMaxV, vx); fMinV = Math.min(fMinV, vx);
         fMaxDelta = Math.max(fMaxDelta, totalDef); 
