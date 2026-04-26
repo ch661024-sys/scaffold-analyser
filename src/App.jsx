@@ -322,7 +322,7 @@ const App = () => {
         // lookup). This captures the exact shear/moment BEFORE the node's reaction is applied,
         // ensuring peak shear at discontinuities (springs, point loads) is exact and not
         // approximated by the last 1/50 segment point which may be up to L/50 away.
-        if (i < nNodes - 2) plotPts.push(sortedNodes[i+1] - 2e-6);
+        plotPts.push(sortedNodes[i+1] - 2e-6); // just-before for ALL nodes incl. right end
       }
       plotPts.push(beamLength);
 
