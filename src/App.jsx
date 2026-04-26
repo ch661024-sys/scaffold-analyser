@@ -326,11 +326,16 @@ const App = () => {
         sortedNodes.forEach((n, idx) => {
           if (n <= x + 1e-6) {
             const s = currentSupportsState.find(it => Math.abs(it.x - n) < 1e-5 && it.active);
-            // For ALL support types (including spring), use finalReactions[2*idx] which equals
-            // (K·U - F) at that DOF — the full nodal equilibrium residual including spring
-            // stiffness coupling terms. Manually computing k·(-U) only captures the diagonal
-            // spring term and misses element coupling, causing shear errors.
-            let rV = s ? finalReactions[2 * idx] : 0;
+            // Spring DOFs are FREE (not constrained), so finalReactions[2*idx] ≈ 0 for them
+            // (free DOFs satisfy KU=F by definition). Spring force must be k × (-U).
+            // For pinned/fixed/liftoff (constrained DOFs), finalReactions[2*idx] = KU-F ≠ 0
+            // and gives the correct upward constraint reaction.
+            let rV = 0;
+            if (s) {
+              rV = s.type === 'spring'
+                ? (parseFloat(s.stiffness) || 0) * 1000 * (-U_full[2 * idx])
+                : finalReactions[2 * idx];
+            }
             let rM = (s && s.type === 'fixed') ? finalReactions[2 * idx + 1] : 0;
             vx += rV; mx += rV * (x - n) - rM;
           }
@@ -371,11 +376,15 @@ const App = () => {
       const idx = sortedNodes.findIndex(n => Math.abs(n - s.x) < 1e-5);
       let vF = 0, mF = 0;
       if (state?.active) {
-        // Use finalReactions for all support types — spring stiffness is already embedded
-        // in the global K matrix, so finalReactions[2*idx] correctly reflects the spring
-        // force including structural coupling (not just the k·u diagonal term).
-        vF = finalReactions[2 * idx];
-        mF = s.type === 'fixed' ? finalReactions[2 * idx + 1] : 0;
+        if (s.type === 'spring') {
+          // Spring DOF is free — finalReactions ≈ 0 for free DOFs.
+          // Spring force = stiffness × compression = k × (-U), upward positive.
+          vF = (parseFloat(s.stiffness) || 0) * 1000 * (-U_full[2 * idx]);
+        } else {
+          // Constrained DOF: finalReactions = KU - F = correct upward reaction.
+          vF = finalReactions[2 * idx];
+          mF = s.type === 'fixed' ? finalReactions[2 * idx + 1] : 0;
+        }
       }
       return { id: s.id, x: s.x, vertical: vF, moment: mF, active: state?.active, type: s.type, stiffness: s.stiffness };
     });
