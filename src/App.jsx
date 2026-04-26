@@ -318,6 +318,11 @@ const App = () => {
       for (let i=0; i<nNodes-1; i++) {
         const L_seg = sortedNodes[i+1] - sortedNodes[i];
         for (let j=0; j<50; j++) plotPts.push(sortedNodes[i] + (j * L_seg / 50));
+        // Insert a point just BEFORE the end node (2µm offset > 1µm tolerance used in node
+        // lookup). This captures the exact shear/moment BEFORE the node's reaction is applied,
+        // ensuring peak shear at discontinuities (springs, point loads) is exact and not
+        // approximated by the last 1/50 segment point which may be up to L/50 away.
+        if (i < nNodes - 2) plotPts.push(sortedNodes[i+1] - 2e-6);
       }
       plotPts.push(beamLength);
 
