@@ -314,17 +314,20 @@ const App = () => {
     }
 
     if (currentStable) {
-      const plotPts = [];
-      for (let i=0; i<nNodes-1; i++) {
+      // Build plotPts so every structural node is evaluated exactly:
+      //   • AT the node   (x = n)       → post-reaction value
+      //   • BEFORE the node (x = n-2µm) → pre-reaction value (2µm > 1µm lookup tolerance)
+      // Plus 50 interior points per segment for a smooth envelope shape.
+      const plotPtsSet = new Set();
+      sortedNodes.forEach(n => {
+        plotPtsSet.add(n);             // exact at node
+        if (n > 0) plotPtsSet.add(n - 2e-6); // just before node
+      });
+      for (let i = 0; i < nNodes - 1; i++) {
         const L_seg = sortedNodes[i+1] - sortedNodes[i];
-        for (let j=0; j<50; j++) plotPts.push(sortedNodes[i] + (j * L_seg / 50));
-        // Insert a point just BEFORE the end node (2µm offset > 1µm tolerance used in node
-        // lookup). This captures the exact shear/moment BEFORE the node's reaction is applied,
-        // ensuring peak shear at discontinuities (springs, point loads) is exact and not
-        // approximated by the last 1/50 segment point which may be up to L/50 away.
-        plotPts.push(sortedNodes[i+1] - 2e-6); // just-before for ALL nodes incl. right end
+        for (let j = 1; j < 50; j++) plotPtsSet.add(sortedNodes[i] + j * L_seg / 50);
       }
-      plotPts.push(beamLength);
+      const plotPts = Array.from(plotPtsSet).sort((a, b) => a - b);
 
       plotPts.forEach(x => {
         let vx = 0, mx = 0;
@@ -346,13 +349,20 @@ const App = () => {
           }
         });
         pointLoads.forEach(p => { if (p.x <= x + 1e-6) { vx -= p.magnitude; mx -= p.magnitude * (x - p.x); } });
-        let wBase = globalUDL + selfWeight;
-        for (let stepX = 0; stepX < x; stepX += 0.05) {
-          const seg = Math.min(0.05, x - stepX), midX = stepX + seg/2;
-          let pW = 0; patchUDLs.forEach(p => { if (midX >= p.start && midX <= p.end) pW += p.magnitude; });
-          const totalW = wBase + pW;
-          vx -= totalW * seg; mx -= totalW * seg * (x - midX);
-        }
+        // Exact closed-form UDL integration — no numerical stepping errors.
+        // For a uniform load w from 0→x: shear contribution = w·x, moment = w·x²/2.
+        // For each patch UDL from p.start→p.end, the active length to x is clamped.
+        const wBase = globalUDL + selfWeight;
+        vx -= wBase * x;
+        mx -= wBase * x * x / 2;
+        patchUDLs.forEach(p => {
+          if (x > p.start) {
+            const xEnd = Math.min(x, p.end);
+            const len = xEnd - p.start;
+            vx -= p.magnitude * len;
+            mx -= p.magnitude * len * (x - (p.start + xEnd) / 2);
+          }
+        });
         const elementIdx = Math.min(nNodes - 2, Math.max(0, sortedNodes.findIndex(n => n > x - 1e-5) - 1));
         const x1 = sortedNodes[elementIdx], xi = (x - x1) / (sortedNodes[elementIdx + 1] - x1);
         const L_elem = (sortedNodes[elementIdx + 1] - x1);
