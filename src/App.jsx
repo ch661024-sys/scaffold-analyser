@@ -559,14 +559,14 @@ const App = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-8 md:gap-12 md:border-l md:border-white/10 md:pl-12 h-full py-2 w-full md:w-auto">
-                   <div className="flex-1 min-w-[120px] space-y-2">
-                     <div className="flex justify-between items-end"><span className="text-[10px] font-black uppercase opacity-50 tracking-widest">M-Util</span><span className={`text-xl font-black  ${activeBeam.utilM > 100 ? 'text-rose-500' : 'text-white'}`}>{activeBeam.utilM.toFixed(0)}%</span></div>
-                     <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden"><div className={`h-full transition-all duration-1000 ${activeBeam.utilM > 100 ? 'bg-rose-500' : 'bg-cyan-500'}`} style={{ width: `${Math.min(100, activeBeam.utilM)}%` }} /></div>
-                   </div>
-                   <div className="flex-1 min-w-[120px] space-y-2">
-                     <div className="flex justify-between items-end"><span className="text-[10px] font-black uppercase opacity-50 tracking-widest">V-Util</span><span className={`text-xl font-black  ${activeBeam.utilV > 100 ? 'text-rose-500' : 'text-white'}`}>{activeBeam.utilV.toFixed(0)}%</span></div>
-                     <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden"><div className={`h-full transition-all duration-1000 ${activeBeam.utilV > 100 ? 'bg-rose-500' : 'bg-rose-500'}`} style={{ width: `${Math.min(100, activeBeam.utilV)}%` }} /></div>
-                   </div>
+                    <div className="flex-1 min-w-[120px] space-y-2">
+                      <div className="flex justify-between items-end"><span className="text-[10px] font-black uppercase opacity-50 tracking-widest">M-Util</span><span className={`text-xl font-black  ${activeBeam.utilM > 100 ? 'text-rose-500' : 'text-blue-400'}`}>{activeBeam.utilM.toFixed(0)}%</span></div>
+                      <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden"><div className={`h-full transition-all duration-1000 ${activeBeam.utilM > 100 ? 'bg-rose-500' : 'bg-blue-500'}`} style={{ width: `${Math.min(100, activeBeam.utilM)}%` }} /></div>
+                    </div>
+                    <div className="flex-1 min-w-[120px] space-y-2">
+                      <div className="flex justify-between items-end"><span className="text-[10px] font-black uppercase opacity-50 tracking-widest">V-Util</span><span className={`text-xl font-black  ${activeBeam.utilV > 100 ? 'text-rose-500' : 'text-orange-400'}`}>{activeBeam.utilV.toFixed(0)}%</span></div>
+                      <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden"><div className={`h-full transition-all duration-1000 ${activeBeam.utilV > 100 ? 'bg-rose-500' : 'bg-orange-400'}`} style={{ width: `${Math.min(100, activeBeam.utilV)}%` }} /></div>
+                    </div>
                 </div>
               </div>
 
